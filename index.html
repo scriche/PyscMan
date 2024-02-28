@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Script Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <h2>Python Scripts</h2>
+            <ul id="script-list">
+                <!-- Script items will be dynamically added here -->
+            </ul>
+            <button id="new-script-btn">New Python Script</button>
+            <button id="start-btn">Start</button>
+            <button id="stop-btn">Stop</button>
+            <p id="next-run-time">Next Run: <span id="next-run"></span></p>
+        </div>
+        <div class="main-panel">
+            <input type="file" id="file-input">
+            <textarea id="script-editor" rows="10" cols="50"></textarea>
+            <ul id="pip-packages">
+                <!-- List of pip packages will be dynamically added here -->
+            </ul>
+            <select id="schedule-type">
+                <option value="once">Run Once</option>
+                <option value="schedule">Scheduled</option>
+            </select>
+            <input type="text" id="schedule-time" placeholder="Schedule Time">
+            <p>Last Run: <span id="last-run"></span></p>
+            <p id="current-status">Current Status: <span id="status"></span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

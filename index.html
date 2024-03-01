@@ -3,37 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Script Manager</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>PyScript Manager</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        h2,h3,div {
+            color: #d1d1d1;
+        }
+        .container {
+            display: flex;
+            height: 100%;
+        }
+        .left-panel {
+            flex: 1;
+            background-color: #1b1b1b;
+            padding: 20px;
+            overflow: auto; /* Add this to enable scrolling if necessary */
+            display: flex;
+            flex-direction: column;
+        }
+        .main-panel {
+            background-color: #2e2e2e;
+            flex: 3;
+            padding: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+        li:hover {
+            background-color: #ddd;
+        }
+        .script-info {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0; /* Prevent item from shrinking */
+        }
+        .script-name {
+            margin-right: 10px;
+            font-size: 18px;
+            flex-grow: 1; /* Allow item to grow */
+            overflow: hidden; /* Hide overflowing text */
+            text-overflow: ellipsis; /* Show ellipsis for overflow */
+        }
+        .status {
+            
+        }
+        .status.running {
+            background-color: green;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .status.stopped {
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .time-left {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .button {
+            padding: 10px 20px; /* Adjusted padding */
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-top: 20px;
+        }
+        .schedule-options {
+            margin-top: 20px;
+        }
+        .schedule-option {
+            display: none;
+        }
+        .schedule-option.show {
+            display: block;
+        }
+        .main-left {
+            width: 50%;
+        }
+        .main-right {
+            width: 50%;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="left-panel">
-            <h2>Python Scripts</h2>
-            <ul id="script-list">
-                <!-- Script items will be dynamically added here -->
+            <h2 style="flex: none;">Python Scripts</h2>
+            <button class="button">New Python Script</button>
+            <ul>
+                <li>
+                    <div class="script-info">
+                        <div class="status running"></div>
+                        <div class="script-name">Script 1</div>
+                    </div>
+                    <div class="time-left">10 minutes</div>
+                    <button class="button">Stop</button>
+                </li>
+                <li>
+                    <div class="script-info">
+                        <div class="status stopped"></div>
+                        <div class="script-name">Script 2</div>
+                    </div>
+                    <div class="time-left">15 minutes</div>
+                    <button class="button">Start</button>
+                </li>
+                <!-- Add more scripts as needed -->
             </ul>
-            <button id="new-script-btn">New Python Script</button>
-            <button id="start-btn">Start</button>
-            <button id="stop-btn">Stop</button>
-            <p id="next-run-time">Next Run: <span id="next-run"></span></p>
         </div>
         <div class="main-panel">
-            <input type="file" id="file-input">
-            <textarea id="script-editor" rows="10" cols="50"></textarea>
-            <ul id="pip-packages">
-                <!-- List of pip packages will be dynamically added here -->
-            </ul>
-            <select id="schedule-type">
-                <option value="once">Run Once</option>
-                <option value="schedule">Scheduled</option>
-            </select>
-            <input type="text" id="schedule-time" placeholder="Schedule Time">
-            <p>Last Run: <span id="last-run"></span></p>
-            <p id="current-status">Current Status: <span id="status"></span></p>
+            <div class="main-left">
+                <h2>Script Details</h2>
+                <div class="script-details">
+                    <div class="script-info">
+                        <div class="status running"></div>
+                        <div class="script-name">Script 1</div>
+                    </div>
+                    <div class="status">Status: Running</div>
+                    <div class="time-left">Next run in: 10 minutes</div>
+                    <button class="button">Start</button>
+                </div>
+                <h3>Upload/Select File</h3>
+                <input type="file">
+                <div class="schedule-options">
+                    <h3>Schedule Options</h3>
+                    <select id="schedule-type" onchange="toggleScheduleOptions()">
+                        <option value="once">Once</option>
+                        <option value="interval">Interval</option>
+                        <option value="schedule">Schedule</option>
+                    </select>
+                    <div class="schedule-option once">
+                        <label for="once-time">Time:</label>
+                    </div>
+                    <div class="schedule-option interval">
+                        <label for="interval-minutes">Interval (minutes):</label>
+                        <input type="number" id="interval-minutes" min="1">
+                    </div>
+                    <div class="schedule-option schedule">
+                        <label for="schedule-time">Time:</label>
+                        <input type="time" id="schedule-time">
+                    </div>
+                </div>
+            </div>
+            <div class="main-right">
+                ttt
+            </div>
+            <div class="editor">
+                <h3>Editor</h3>
+                <textarea placeholder="Your Python script goes here..."></textarea>
+            </div>
         </div>
     </div>
+    <script>
+        function toggleScheduleOptions() {
+            var scheduleType = document.getElementById("schedule-type").value;
+            var options = document.querySelectorAll('.schedule-option');
+            options.forEach(function(option) {
+                option.classList.remove('show');
+            });
+            document.querySelector('.schedule-option.' + scheduleType).classList.add('show');
 
-    <script src="script.js"></script>
+        }
+    </script>
 </body>
 </html>

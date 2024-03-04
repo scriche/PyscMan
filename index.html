@@ -19,17 +19,18 @@
             height: 100%;
         }
         .left-panel {
-            flex: 1;
             background-color: #1b1b1b;
             padding: 20px;
             overflow: auto; /* Add this to enable scrolling if necessary */
-            display: flex;
-            flex-direction: column;
+            width: 30%;
         }
         .main-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
             background-color: #2e2e2e;
-            flex: 3;
-            padding: 20px;
+            width: 100%;
         }
         ul {
             list-style-type: none;
@@ -58,9 +59,6 @@
             overflow: hidden; /* Hide overflowing text */
             text-overflow: ellipsis; /* Show ellipsis for overflow */
         }
-        .status {
-            
-        }
         .status.running {
             background-color: green;
             width: 20px;
@@ -79,6 +77,7 @@
             font-size: 16px;
             color: #666;
             margin-top: 5px;
+            margin-right: 10px;
         }
         .button {
             padding: 10px 20px; /* Adjusted padding */
@@ -86,7 +85,6 @@
             background-color: #007bff;
             color: white;
             cursor: pointer;
-            margin: 10px 0;
         }
         textarea {
             width: 100%;
@@ -102,12 +100,14 @@
         .schedule-option.show {
             display: block;
         }
-        .main-left {
-            width: 50%;
+        .main-grid-item {
+            padding: 20px;
         }
-        .main-right {
-            width: 50%;
+        .main-grid-item-bottom {
+            grid-column: span 2;
+            padding: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -136,7 +136,7 @@
             </ul>
         </div>
         <div class="main-panel">
-            <div class="main-left">
+            <div class="main-grid-item">
                 <h2>Script Details</h2>
                 <div class="script-details">
                     <div class="script-info">
@@ -169,10 +169,12 @@
                     </div>
                 </div>
             </div>
-            <div class="main-right">
-                ttt
+            <div class="main-grid-item">
+                <div style="background-color: #1b1b1b;">
+                    
+                </div>
             </div>
-            <div class="editor">
+            <div class="main-grid-item-bottom">
                 <h3>Editor</h3>
                 <textarea placeholder="Your Python script goes here..."></textarea>
             </div>

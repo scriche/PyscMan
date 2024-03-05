@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request
 import os
 import subprocess
+import threading
 
 
 app = Flask(__name__)
@@ -73,31 +74,34 @@ def start_script_process(script_name):
     # Log file
     log_file = os.path.join(script_directory, 'log.txt')
 
-    # Construct the command to activate the virtual environment and start the script
-    if os.name == 'nt':  # For Windows
-        activate_cmd = os.path.join(venv_directory, 'Scripts', 'activate.bat')
-        command = f'call "{activate_cmd}" && python "{script_file}"'
-    else:  # For Unix-like systems
-        activate_cmd = os.path.join(venv_directory, 'bin', 'activate')
-        command = f'source "{activate_cmd}" && python "{script_file}"'
+    # define a function that is the thread to start the script
+    def start_thread():
 
-    # Start the script within the activated virtual environment
-    process = subprocess.Popen(command, shell=True, stdout=open(log_file, 'w'), stderr=subprocess.STDOUT)
+        # Construct the command to activate the virtual environment and start the script
+        if os.name == 'nt':  # For Windows
+            activate_cmd = os.path.join(venv_directory, 'Scripts', 'activate.bat')
+            command = f'call "{activate_cmd}" && python "{script_file}"'
+        else:  # For Unix-like systems
+            activate_cmd = os.path.join(venv_directory, 'bin', 'activate')
+            command = f'. "{activate_cmd}" && python "{script_file}"'
 
-    # Store the process in the running_scripts dictionary
-    running_scripts[script_name] = process
+        # Start the script within the activated virtual environment
+        process = subprocess.Popen(command, shell=True, stdout=open(log_file, 'w'), stderr=subprocess.STDOUT)
+        process.wait()
+        on_exit(script_name)
 
-    # Wait for the subprocess to finish and call the callback function (if provided)
-    exit_status = process.wait()
-    if exit_status == 0:
-        print(f'Script {script_name} finished successfully')
-    else:
-        print(f'Script {script_name} failed with exit status {exit_status}')
+    thread = threading.Thread(target=start_thread)
+    thread.start()
+    running_scripts[script_name] = thread
+    return thread
+
+def on_exit(script_name):
+    # Remove the script from the running_scripts dictionary
+    del running_scripts[script_name]
 def stop_script_process(script_name):
     if script_name in running_scripts:
-        process = running_scripts[script_name]
-        process.terminate()
-        del running_scripts[script_name]
+        thread = running_scripts[script_name]
+        thread.join()
 
 
 if __name__ == '__main__':

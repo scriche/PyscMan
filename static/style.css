@@ -1,0 +1,98 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+h2,h3,div {
+    color: #d1d1d1;
+}
+.container {
+    display: flex;
+    height: 100%;
+}
+.left-panel {
+    background-color: #1b1b1b;
+    padding: 20px;
+    overflow: auto; /* Add this to enable scrolling if necessary */
+    width: 30%;
+}
+.main-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    background-color: #2e2e2e;
+    width: 100%;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+.script-info {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* Prevent item from shrinking */
+}
+.script-name {
+    margin-right: 10px;
+    font-size: 18px;
+    flex-grow: 1; /* Allow item to grow */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
+}
+.status.running {
+    background-color: green;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.status.stopped {
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.time-left {
+    font-size: 16px;
+    color: #666;
+    margin-top: 5px;
+    margin-right: 10px;
+}
+.button {
+    padding: 10px 20px; /* Adjusted padding */
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+textarea {
+    width: 100%;
+    height: 200px;
+    margin-top: 20px;
+}
+.schedule-options {
+    margin-top: 20px;
+}
+.schedule-option {
+    display: none;
+}
+.schedule-option.show {
+    display: block;
+}
+.main-grid-item {
+    padding: 20px;
+}
+.main-grid-item-bottom {
+    grid-column: span 2;
+    padding: 20px;
+}

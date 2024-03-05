@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyScript Manager</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+
+        <div class="left-panel">
+            <h2 style="flex: none;">Python Scripts</h2>
+            <button class="button" onclick="showPrompt()">New Python Script</button>
+            <ul>
+                {% for folder in script_folders %}
+                <li>
+                    <div class="script-info">
+                        <div class="status running"></div>
+                        <div class="script-name">{{folder}}</div>
+                    </div>
+                    <div class="time-left">10 minutes</div>
+                    <button class="button" onclick="toggle_script(this)">Start</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="main-panel">
+            <div class="main-grid-item">
+                <h2>Script Details</h2>
+                <div class="script-details">
+                    <div class="script-info">
+                        <div class="status running"></div>
+                        <div class="script-name">Script 1</div>
+                    </div>
+                    <div class="status">Status: Running</div>
+                    <div class="time-left">Next run in: 10 minutes</div>
+                    <button class="button">Start</button>
+                </div>
+                <h3>Upload/Select File</h3>
+                <input type="file">
+                <div class="schedule-options">
+                    <h3>Schedule Options</h3>
+                    <select id="schedule-type" onchange="toggleScheduleOptions()">
+                        <option value="once">Once</option>
+                        <option value="interval">Interval</option>
+                        <option value="schedule">Schedule</option>
+                    </select>
+                    <div class="schedule-option once">
+                        <label for="once-time"></label>
+                    </div>
+                    <div class="schedule-option interval">
+                        <label for="interval-minutes">Interval (minutes):</label>
+                        <input type="number" id="interval-minutes" min="1">
+                    </div>
+                    <div class="schedule-option schedule">
+                        <label for="schedule-time">Time:</label>
+                        <input type="time" id="schedule-time">
+                    </div>
+                </div>
+            </div>
+            <div class="main-grid-item">
+                <div>
+                    Terminal here
+                </div>
+            </div>
+            <div class="main-grid-item-bottom">
+                <h3>Editor</h3>
+                <textarea id="script-editor" placeholder="Your Python script goes here..."></textarea>
+                <button class="button" onclick="saveScript">Save</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            checkScriptStatus();
+        });
+        function checkScriptStatus() {
+            // for each script, check if it's running and update the button
+            var scripts = document.querySelectorAll('.script-info');
+            scripts.forEach(function(script) {
+                var scriptName = script.querySelector('.script-name').innerHTML;
+                var status = script.querySelector('.status');
+                var button = script.parentElement.querySelector('button');
+                // if the scripts name is in the running_scripts list, update the button
+                if (running_scripts.includes(scriptName)) {
+                    status.classList.add('running');
+                    button.innerHTML = "Stop";
+                } else {
+                    status.classList.remove('running');
+                    button.innerHTML = "Start";
+                }
+            });
+        }
+        function toggleScheduleOptions() {
+            var scheduleType = document.getElementById("schedule-type").value;
+            var options = document.querySelectorAll('.schedule-option');
+            options.forEach(function(option) {
+                option.classList.remove('show');
+            });
+            document.querySelector('.schedule-option.' + scheduleType).classList.add('show');
+
+        }
+        function showPrompt() {
+            var scriptName = prompt("Enter the name of the new script");
+            if (scriptName) {
+                window.location.href = "/create_script?name=" + scriptName;
+            }
+        }
+        function toggle_script(button) {
+            if (button.innerHTML == "Start") {
+                button.innerHTML = "Stop";
+                window.location.href = "/start_script?name=" + button.parentElement.querySelector('.script-name').innerHTML;
+
+            } else {
+                button.innerHTML = "Start";
+                window.location.href = "/stop_script?name=" + button.parentElement.querySelector('.script-name').innerHTML;
+            }
+        }
+    </script>
+</body>
+</html>

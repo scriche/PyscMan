@@ -16,6 +16,9 @@ def index():
     # get the list of folders in the script directory
     script_folders = [f for f in os.listdir(script_dir) if os.path.isdir(os.path.join(script_dir, f))]
 
+    # print all subprocesses
+    print(running_scripts)
+
     return render_template('index.html', script_folders=script_folders)
 
 @app.route('/create_script', methods=['GET'])
@@ -84,6 +87,7 @@ def start_script_process(script_name):
         else:  # For Unix-like systems
             activate_cmd = os.path.join(venv_directory, 'bin', 'activate')
             command = f'. "{activate_cmd}" && python "{script_file}"'
+            print(command)
 
         # Start the script within the activated virtual environment
         process = subprocess.Popen(command, shell=True, stdout=open(log_file, 'w'), stderr=subprocess.STDOUT)
